@@ -2,9 +2,8 @@ import * as C from 'graphics-ts/lib/Canvas';
 import * as Shape from 'graphics-ts/lib/Shape';
 import * as O from 'fp-ts/Option';
 import * as boolean from 'fp-ts/boolean';
-import * as R from 'fp-ts/Reader';
 import * as RIO from 'fp-ts-contrib/ReaderIO';
-import { flow, pipe } from 'fp-ts/function';
+import { pipe } from 'fp-ts/function';
 
 export const getPosition = (e: MouseEvent): Shape.Point => ({ x: e.offsetX, y: e.offsetY });
 

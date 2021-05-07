@@ -6,3 +6,5 @@
 !.yarn/versions
 
 .idea
+*.tsbuildinfo
+dist

@@ -4,6 +4,7 @@ import * as Shape from 'graphics-ts/lib/Shape';
 import * as Color from 'graphics-ts/lib/Color';
 import * as Font from 'graphics-ts/lib/Font';
 import * as IO from 'fp-ts/IO';
+import * as apply from 'fp-ts/Apply';
 import * as O from 'fp-ts/Option';
 import * as R from 'fp-ts/Reader';
 import * as RA from 'fp-ts/ReadonlyArray';
@@ -80,26 +81,21 @@ const centerText = (text: D.Text): C.Render<D.Drawing> =>
     RIO.ap(measureText(text)),
   );
 
+const drawText = (text: string, color: Color.Color = Color.black): C.Render<D.Drawing> =>
+  centerText(D.text(Font.font('Helvetica', 30), 0, 0, D.fillStyle(color), text) as D.Text);
+
 const screen: C.Render<D.Drawing> = pipe(
-  fillBackground(D.fillStyle(Color.black)),
-  RIO.chain((bg) =>
-    pipe(
-      centerText(
-        D.text(Font.font('Helvetica', 30), 0, 0, D.fillStyle(Color.white), 'SCRATCH ME') as D.Text,
-      ),
-      RIO.map((text) => D.many([bg, text])),
-    ),
-  ),
+  apply.sequenceT(RIO.readerIO)(fillBackground(D.fillStyle(Color.white)), drawText('SCRATCH ME')),
+  RIO.map(D.many),
 );
 
 const background: C.Render<D.Drawing> = pipe(
-  centerText(
-    D.text(Font.font('Helvetica', 30), 0, 0, D.fillStyle(Color.black), 'LOOK BETTER') as D.Text,
-  ),
+  apply.sequenceT(RIO.readerIO)(drawText('LOOK BETTER'), fillBackground(D.fillStyle(Color.white))),
+  RIO.map(D.many),
 );
 
 const line = (coords: Shape.Point, prevCoords: Shape.Point): Shape.Shape =>
-  Shape.path(RA.readonlyArray)([
+  Shape.path(RA.Foldable)([
     Shape.point(prevCoords.x, prevCoords.y),
     Shape.point(coords.x, coords.y),
   ]);
