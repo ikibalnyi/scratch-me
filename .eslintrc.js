@@ -4,7 +4,6 @@ module.exports = {
     'eslint:recommended',
     'plugin:import/recommended',
     'plugin:import/typescript',
-    'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier',
@@ -12,7 +11,6 @@ module.exports = {
     'prettier/@typescript-eslint',
     'plugin:prettier/recommended',
   ],
-  ignorePatterns: ['.eslintrc.js'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     tsconfigRootDir: __dirname,
@@ -47,13 +45,5 @@ module.exports = {
     'import/named': 0,
     'import/namespace': 0,
     '@typescript-eslint/require-await': 0,
-  },
-  overrides: [
-    {
-      files: ['src/@fp/**'],
-      rules: {
-        'no-restricted-imports': [2, { patterns: ['fp-ts/es6/*', 'fp-ts/lib/*'] }],
-      }
-    }
-  ],
+  }
 };

@@ -39,6 +39,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@typescript-eslint/eslint-plugin", "virtual:b41704c3c9f358807a6c53e08a9cdb470f223b99e5484d588bb6b607596ed36cc4c6cbbd714d8b699683b9b7c3a9f8945d308cbb34c71dea429783e4cd74b376#npm:4.13.0"],
             ["@typescript-eslint/parser", "virtual:b41704c3c9f358807a6c53e08a9cdb470f223b99e5484d588bb6b607596ed36cc4c6cbbd714d8b699683b9b7c3a9f8945d308cbb34c71dea429783e4cd74b376#npm:4.13.0"],
+            ["cross-env", "npm:7.0.3"],
             ["eslint", "npm:7.18.0"],
             ["eslint-config-prettier", "virtual:b41704c3c9f358807a6c53e08a9cdb470f223b99e5484d588bb6b607596ed36cc4c6cbbd714d8b699683b9b7c3a9f8945d308cbb34c71dea429783e4cd74b376#npm:7.1.0"],
             ["eslint-import-resolver-typescript", "virtual:b41704c3c9f358807a6c53e08a9cdb470f223b99e5484d588bb6b607596ed36cc4c6cbbd714d8b699683b9b7c3a9f8945d308cbb34c71dea429783e4cd74b376#npm:2.3.0"],
@@ -1560,6 +1561,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/core-util-is-npm-1.0.2-9fc2b94dc3-089015ee3c.zip/node_modules/core-util-is/",
           "packageDependencies": [
             ["core-util-is", "npm:1.0.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["cross-env", [
+        ["npm:7.0.3", {
+          "packageLocation": "./.yarn/cache/cross-env-npm-7.0.3-96d81820f4-af4fa4dab3.zip/node_modules/cross-env/",
+          "packageDependencies": [
+            ["cross-env", "npm:7.0.3"],
+            ["cross-spawn", "npm:7.0.3"]
           ],
           "linkType": "HARD",
         }]
@@ -5449,6 +5460,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["scrath-me", "workspace:."],
             ["@typescript-eslint/eslint-plugin", "virtual:b41704c3c9f358807a6c53e08a9cdb470f223b99e5484d588bb6b607596ed36cc4c6cbbd714d8b699683b9b7c3a9f8945d308cbb34c71dea429783e4cd74b376#npm:4.13.0"],
             ["@typescript-eslint/parser", "virtual:b41704c3c9f358807a6c53e08a9cdb470f223b99e5484d588bb6b607596ed36cc4c6cbbd714d8b699683b9b7c3a9f8945d308cbb34c71dea429783e4cd74b376#npm:4.13.0"],
+            ["cross-env", "npm:7.0.3"],
             ["eslint", "npm:7.18.0"],
             ["eslint-config-prettier", "virtual:b41704c3c9f358807a6c53e08a9cdb470f223b99e5484d588bb6b607596ed36cc4c6cbbd714d8b699683b9b7c3a9f8945d308cbb34c71dea429783e4cd74b376#npm:7.1.0"],
             ["eslint-import-resolver-typescript", "virtual:b41704c3c9f358807a6c53e08a9cdb470f223b99e5484d588bb6b607596ed36cc4c6cbbd714d8b699683b9b7c3a9f8945d308cbb34c71dea429783e4cd74b376#npm:2.3.0"],

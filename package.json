@@ -9,12 +9,14 @@
   ],
   "scripts": {
     "start": "webpack-dev-server -c webpack.config.js",
-    "build": "tsc -p ./tsconfig.build.json && tsc -p ./tsconfig.build-es6.json && npm run import-path-rewrite",
-    "deploy": "gh-pages -d dist"
+    "build": "cross-env NODE_ENV=production webpack -c webpack.config.js",
+    "deploy": "gh-pages -d dist",
+    "import-path-rewrite": "import-path-rewrite"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.13.0",
     "@typescript-eslint/parser": "^4.13.0",
+    "cross-env": "^7.0.3",
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-import-resolver-typescript": "^2.3.0",
