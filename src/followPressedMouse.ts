@@ -1,9 +1,9 @@
-import * as C from 'graphics-ts/lib/Canvas';
-import * as Shape from 'graphics-ts/lib/Shape';
+import * as RIO from 'fp-ts-contrib/ReaderIO';
 import * as O from 'fp-ts/Option';
 import * as boolean from 'fp-ts/boolean';
-import * as RIO from 'fp-ts-contrib/ReaderIO';
 import { pipe } from 'fp-ts/function';
+import * as C from 'graphics-ts/lib/Canvas';
+import * as Shape from 'graphics-ts/lib/Shape';
 
 export const getPosition = (e: MouseEvent): Shape.Point => ({ x: e.offsetX, y: e.offsetY });
 
@@ -15,13 +15,16 @@ export const bind: <K extends keyof HTMLElementEventMap>(
   return c;
 };
 
-export const bindWithContext = <K extends keyof HTMLElementEventMap, A>(
-  type: K,
-  f: (e: HTMLElementEventMap[K]) => C.Render<A>,
-): C.Render<CanvasRenderingContext2D> => (ctx) => () => {
-  ctx.canvas.addEventListener(type, (e) => f(e)(ctx)());
-  return ctx;
-};
+export const bindWithContext =
+  <K extends keyof HTMLElementEventMap, A>(
+    type: K,
+    f: (e: HTMLElementEventMap[K]) => C.Render<A>,
+  ): C.Render<CanvasRenderingContext2D> =>
+  (ctx) =>
+  () => {
+    ctx.canvas.addEventListener(type, (e) => f(e)(ctx)());
+    return ctx;
+  };
 
 export const unbind: <K extends keyof HTMLElementEventMap>(
   type: K,
@@ -31,7 +34,8 @@ export const unbind: <K extends keyof HTMLElementEventMap>(
   return c;
 };
 
-export const followPressedMouse = (
+export const followMouseMove = (
+  shouldBePressed: boolean,
   onMove: (
     position: Shape.Point,
     prevPosition: O.Option<Shape.Point>,
@@ -65,22 +69,15 @@ export const followPressedMouse = (
     isPressed && clearMousePosition();
   };
   const handleMouseMove = (e: MouseEvent): C.Render<CanvasRenderingContext2D> =>
-    pipe(
-      RIO.ask<CanvasRenderingContext2D>(),
-      RIO.chain(() =>
-        boolean.fold(
-          () => RIO.ask<CanvasRenderingContext2D>(),
-          () =>
-            pipe(
-              onMove(getPosition(e), mousePosition),
-              RIO.map((ctx) => {
-                setMousePosition(e);
-                return ctx;
-              }),
-            ),
-        )(isPressed),
-      ),
-    );
+    shouldBePressed && !isPressed
+      ? RIO.ask<CanvasRenderingContext2D>()
+      : pipe(
+          onMove(getPosition(e), mousePosition),
+          RIO.map((ctx) => {
+            setMousePosition(e);
+            return ctx;
+          }),
+        );
 
   const handleMouseDown = (e: MouseEvent): C.Render<CanvasRenderingContext2D> =>
     pipe(
