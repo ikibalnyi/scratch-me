@@ -12,7 +12,9 @@ import * as D from 'graphics-ts/lib/Drawing';
 import * as Font from 'graphics-ts/lib/Font';
 import * as Shape from 'graphics-ts/lib/Shape';
 
-import { followPressedMouse } from './followPressedMouse';
+import { followMouseMove } from './followPressedMouse';
+import { drawImage } from 'graphics-ts/lib/Canvas';
+import { Coords } from './types';
 
 const CANVAS_ID = 'canvas';
 
@@ -20,7 +22,7 @@ const ERASE_MODE = 'destination-out';
 const _DEFAULT_MODE = 'source-over';
 const BACKGROUND_MODE = 'destination-over';
 
-const ERASE_RADIUS = 10;
+const ERASE_RADIUS = 15;
 
 const getDocumentDimensions = (): C.CanvasDimensions => ({
   width: document.body.clientWidth,
@@ -125,35 +127,58 @@ const erase = (
     ),
   );
 
-const initCanvas: C.Render<CanvasRenderingContext2D> = pipe(
-  RIO.ask<CanvasRenderingContext2D>(),
-  RIO.chainFirst(() =>
-    pipe(
-      R.of(getDocumentDimensions),
-      RIO.chain(ctxSetDimension),
-      RIO.chain(() =>
+const initCanvas = (
+  icons: { image: C.ImageSource; position: Coords; size: { width: number; height: number } }[],
+) =>
+  pipe(
+    RIO.ask<CanvasRenderingContext2D>(),
+    RIO.chainFirst(() =>
+      pipe(
+        R.of(getDocumentDimensions),
+        RIO.chain(ctxSetDimension),
+        RIO.chain(() => {
+          const dpi = getDevicePixelRatio();
+
+          return C.scale(dpi, dpi);
+        }),
+      ),
+    ),
+    RIO.chainFirst(() => RIO.chain(D.render)(screen)),
+    RIO.chain(() =>
+      followMouseMove(false, (coords, prevCoords) =>
         pipe(
-          R.of(getDevicePixelRatio),
-          RIO.chain((dpi) => C.scale(dpi, dpi)),
+          erase(coords, prevCoords),
+          RIO.chain(() => C.setGlobalCompositeOperation(BACKGROUND_MODE)),
+          RIO.chainFirst(() =>
+            pipe(
+              icons.map(({ image, position, size }) =>
+                C.drawImageScale(image, position.x, position.y, size.width, size.height),
+              ),
+              RA.sequence(RIO.Applicative),
+            ),
+          ),
+          RIO.chainFirst(() => RIO.chain(D.render)(background)),
         ),
       ),
     ),
-  ),
-  RIO.chainFirst(() => RIO.chain(D.render)(screen)),
-  RIO.chain(() =>
-    followPressedMouse((coords, prevCoords) =>
-      pipe(
-        erase(coords, prevCoords),
-        RIO.chain(() => C.setGlobalCompositeOperation(BACKGROUND_MODE)),
-        RIO.chainFirst(() => RIO.chain(D.render)(background)),
-      ),
-    ),
-  ),
-);
+  );
+
+const icons = [
+  {
+    src: './linkedin.png',
+    href: 'https://www.linkedin.com/in/illia-kibalnyi/',
+  },
+];
 
 const init = (): void => {
+  const images = icons.map((icon) => {
+    const image = new Image();
+    image.src = icon.src;
+    return { image, position: { x: 50, y: 50 }, size: { width: 50, height: 50 } };
+  });
+
   C.renderTo(CANVAS_ID, () => error(`[ERROR]: Unable to find canvas with id ${CANVAS_ID}`))(
-    initCanvas,
+    initCanvas(images),
   )();
 };
 
